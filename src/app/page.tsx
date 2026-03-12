@@ -4,37 +4,15 @@ import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import { client } from "@/lib/client"
 import { useRouter } from "next/navigation";
+import { useUsername } from "@/hooks/use-username";
 
-const ANIMALS = ["wolf", "hawk", "bear", "shark"]
-
-const STORAGE_KEY = "chat-username"
-
-const generateUsername = () => {
-  const word = ANIMALS[Math.floor(Math.random() * ANIMALS.length)]
-  return `anon-${word}-${nanoid(5)}`
-}
 
 
 export default function Home() {
-  const [username, setUsername] = useState("")
+  const { username } = useUsername()
   const router = useRouter()
 
-  useEffect(() => {
-    const main = () => {
-      const stored = localStorage.getItem(STORAGE_KEY)
-
-      if(stored) {
-        setUsername(stored)
-        return 
-      }
-
-      const generated = generateUsername()
-      localStorage.setItem(STORAGE_KEY, generated)
-      setUsername(generated)
-    }
-
-    main()
-  }, [])
+  
 
   const {mutate: createRoom} = useMutation({
     mutationFn: async () => {
